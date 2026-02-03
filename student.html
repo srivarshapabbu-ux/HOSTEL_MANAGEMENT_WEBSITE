@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SRU Hostel Portal - Student Dashboard</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      min-height: 100vh;
+      background-image: url('https://api.makemyhouse.com/public/Media/rimage/1024/designers_project/1573037063_897.JPG?watermark=false');  
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    header {
+      background-color: #004aad;
+      color: #fff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      display: none;
+      box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+    }
+
+    h3 {
+      margin-bottom: 15px;
+      color: #004aad;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #004aad;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 15px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #004aad;
+      color: white;
+    }
+
+    .resolved {
+      color: green;
+      font-weight: bold;
+    }
+
+    #welcome {
+      margin-top: 30px;
+      text-align: center;
+      color: #004aad;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>SRU Hostel Portal - Student Dashboard</h2>
+  <nav>
+    <a onclick="showSection('profile')">Profile</a>
+    <a onclick="showSection('parent')">Parent Details</a>
+    <a onclick="showSection('leave')">Leave Request</a>
+    <a onclick="showSection('fee')">Fee Details</a>
+    <a onclick="showSection('mess')">Mess Menu</a>
+    <a onclick="showSection('complaint')">Complaint Box</a>
+    <a onclick="showSection('warden')">Warden Details</a>
+    <a href="/logout">Logout</a>
+  </nav>
+</header>
+
+<h2 id="welcome">Welcome, Student! 👋<br>Click a menu option to continue.</h2>
+
+<!-- PROFILE SECTION -->
+<div class="container" id="profile">
+  <h3>Student Profile</h3>
+  <form>
+    <label>Name</label>
+    <input type="text" value="Yamsani Saiprasanna">
+
+    <label>Roll Number</label>
+    <input type="text" value="21CS1234">
+
+    <label>Branch</label>
+    <input type="text" value="CSE - Artificial Intelligence">
+
+    <label>Room Number</label>
+    <input type="text" value="B-204">
+
+    <button>Save Changes</button>
+  </form>
+</div>
+
+<!-- PARENT DETAILS -->
+<div class="container" id="parent">
+  <h3>Parent Details</h3>
+  <form>
+    <label>Parent Name</label>
+    <input type="text" value="Sridhar">
+
+    <label>Contact Number</label>
+    <input type="text" value="9876543210">
+
+    <label>Email</label>
+    <input type="email" value="sridhar@gmail.com">
+
+    <button>Save</button>
+  </form>
+</div>
+
+<!-- LEAVE REQUEST -->
+<div class="container" id="leave">
+  <h3>Leave Request</h3>
+
+  <label>Reason</label>
+  <textarea id="leaveReason"></textarea>
+
+  <label>From Date</label>
+  <input type="date" id="leaveFrom">
+
+  <label>To Date</label>
+  <input type="date" id="leaveTo">
+
+  <button onclick="submitLeave()">Submit Leave Request</button>
+  <p id="leaveMsg" style="margin-top: 10px;"></p>
+</div>
+
+<!-- FEE DETAILS -->
+<div class="container" id="fee">
+  <h3>Fee Details</h3>
+
+  <table>
+    <tr>
+      <th>Semester</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Date</th>
+    </tr>
+    <tr>
+      <td>Sem 1</td>
+      <td>₹35,000</td>
+      <td class="resolved">Paid</td>
+      <td>20-10-2023</td>
+    </tr>
+
+    <tr>
+      <td>Sem 2</td>
+      <td>₹35,000</td>
+      <td class="resolved">Paid</td>
+      <td>15-04-2024</td>
+    </tr>
+
+    <tr>
+      <td>Sem 3</td>
+      <td>₹35,000</td>
+      <td style="color:orange">Pending</td>
+      <td>-</td>
+    </tr>
+  </table>
+
+  <button style="margin-top:15px;">Pay Fee</button>
+</div>
+
+<!-- MESS MENU -->
+<div class="container" id="mess">
+  <h3>Weekly Mess Menu</h3>
+  <table>
+    <tr>
+      <th>Day</th>
+      <th>Breakfast</th>
+      <th>Lunch</th>
+      <th>Dinner</th>
+    </tr>
+    <tr><td>Monday</td><td>Idly</td><td>Veg Meals</td><td>Chapathi</td></tr>
+    <tr><td>Tuesday</td><td>Dosa</td><td>Dal Rice</td><td>Egg Curry</td></tr>
+    <tr><td>Wednesday</td><td>Poori</td><td>Curd Rice</td><td>Paneer Curry</td></tr>
+    <tr><td>Thursday</td><td>Upma</td><td>Biryani</td><td>Tomato Rice</td></tr>
+    <tr><td>Friday</td><td>Idly</td><td>Curd Rice</td><td>Chicken Curry</td></tr>
+    <tr><td>Saturday</td><td>Masala Dosa</td><td>Lemon Rice</td><td>Fried Rice</td></tr>
+    <tr><td>Sunday</td><td>Poori</td><td>Special Meals</td><td>Paneer Masala</td></tr>
+  </table>
+</div>
+
+<!-- COMPLAINT BOX -->
+<div class="container" id="complaint">
+  <h3>Raise a Complaint</h3>
+
+  <label>Your Complaint</label>
+  <textarea id="complaintText" placeholder="Enter complaint here..."></textarea>
+
+  <button onclick="submitComplaint()">Submit Complaint</button>
+
+  <p id="compStatus" style="margin-top:15px;"></p>
+
+  <h3 style="margin-top:30px;">Complaint History</h3>
+  <table id="complaintTable">
+    <tr>
+      <th>Complaint</th>
+      <th>Status</th>
+      <th>Time Taken</th>
+    </tr>
+  </table>
+</div>
+
+<!-- WARDEN DETAILS -->
+<div class="container" id="warden">
+  <h3>Warden Details</h3>
+  <p><strong>Name:</strong> M. Swapna</p>
+  <p><strong>Block:</strong> GH-8 Girls Hostel</p>
+  <p><strong>Contact:</strong> 9876543210</p>
+</div>
+
+<script>
+  function showSection(id) {
+    document.getElementById("welcome").style.display = "none";
+    document.querySelectorAll(".container").forEach(div => div.style.display = "none");
+    document.getElementById(id).style.display = "block";
+  }
+
+  /* SAMPLE EXISTING COMPLAINTS */
+  let complaints = [
+    { text: "Light not working in room", status: "Resolved", time: "5 hrs" },
+    { text: "Water leakage in bathroom", status: "Resolved", time: "1 day" },
+    { text: "Mess food is oily", status: "Resolved", time: "3 hrs" },
+    { text: "Fan repair required", status: "Resolved", time: "10 hrs" }
+  ];
+
+  window.onload = function () {
+    updateComplaintTable();
+  };
+
+  function updateComplaintTable() {
+    let table = document.getElementById("complaintTable");
+    table.innerHTML = `
+      <tr>
+        <th>Complaint</th>
+        <th>Status</th>
+        <th>Time Taken</th>
+      </tr>
+    `;
+
+    complaints.forEach(c => {
+      table.innerHTML += `
+        <tr>
+          <td>${c.text}</td>
+          <td class="resolved">${c.status}</td>
+          <td>${c.time}</td>
+        </tr>
+      `;
+    });
+  }
+
+  function submitComplaint() {
+    let text = document.getElementById("complaintText").value.trim();
+    let status = document.getElementById("compStatus");
+
+    if (text === "") {
+      status.style.color = "red";
+      status.innerHTML = "⚠ Enter a complaint!";
+      return;
+    }
+
+    status.style.color = "orange";
+    status.innerHTML = "⏳ Complaint sent. Warden reviewing...";
+
+    let start = new Date();
+
+    setTimeout(() => {
+      let end = new Date();
+      let diffHours = Math.max(1, Math.floor((end - start) / (1000 * 60 * 60)));
+
+      let timeTaken = diffHours >= 24 ? Math.floor(diffHours / 24) + " days" : diffHours + " hrs";
+
+      complaints.push({
+        text: text,
+        status: "Resolved",
+        time: timeTaken
+      });
+
+      updateComplaintTable();
+
+      status.style.color = "green";
+      status.innerHTML = "✔ Complaint Resolved";
+
+      document.getElementById("complaintText").value = "";
+
+    }, 3000);
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Parent Dashboard - SRU</title>
+
+<style>
+  * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #f4f6f9;
+      min-height: 100vh;
+      background-image: url('https://api.makemyhouse.com/public/Media/rimage/1024/designers_project/1573037063_897.JPG?watermark=false');  
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+  header {
+    background: rgba(0,0,0,0.75);
+    padding: 15px 40px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 18px;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  #welcome {
+    margin-top: 30px;
+    text-align: center;
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    text-shadow: 1px 1px 5px black;
+  }
+
+  .container {
+    width: 100%;
+    display: none;
+    margin-top: 30px;
+  }
+
+  .card-box {
+    width: 420px;
+    margin: 20px auto;
+    background: rgba(255,255,255,0.94);
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.25);
+  }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #004aad;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    margin-bottom: 12px;
+  }
+
+  button {
+    padding: 8px 14px;
+    border: none;
+    background: #004aad;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+  }
+  th, td {
+    padding: 10px;
+    border: 1px solid #aaa;
+    font-size: 14px;
+  }
+  th { background: #004aad; color: white; }
+</style>
+</head>
+<body>
+
+<header>
+  <h2>SRU Parent Dashboard</h2>
+  
+  <nav>
+    <a onclick="showSection('parentInfo')">Parent Info</a>
+    <a onclick="showSection('childInfo')">Student Info</a>
+    <a onclick="showSection('feeInfo')">Fee Details</a>
+    <a onclick="showSection('leaveReq')">Leave Requests</a>
+    <a href="/logout">Logout</a>
+  </nav>
+</header>
+
+<h1 id="welcome">Welcome Parent 👋<br>Select an option from above</h1>
+
+<!-- ---------------- PARENT INFO ---------------- -->
+<div class="container" id="parentInfo">
+  <div class="card-box">
+    <div class="card-title">Parent Details</div>
+
+    <label>Name</label>
+    <input type="text" value="sridhar">
+
+    <label>Email</label>
+    <input type="email" value="sridhar@sru.edu">
+
+    <label>Phone</label>
+    <input type="text" value="9681248561">
+
+    <label>Address</label>
+    <textarea rows="2">Hyderabad</textarea>
+
+    <button onclick="alert('Parent details updated')">Save</button>
+  </div>
+</div>
+
+<!-- ---------------- STUDENT INFO ---------------- -->
+<div class="container" id="childInfo">
+  <div class="card-box">
+    <div class="card-title">Student Details</div>
+
+    <label>Name</label>
+    <input type="text" value="saiprasanna">
+
+    <label>Roll No</label>
+    <input type="text" value="SRU1001">
+
+    <label>Department</label>
+    <input type="text" value="CSE">
+
+    <label>Hostel / Room</label>
+    <input type="text" value="Alpha / A-101">
+
+    <button onclick="alert('Student details updated')">Update</button>
+  </div>
+</div>
+
+<!-- ---------------- FEE DETAILS ---------------- -->
+<div class="container" id="feeInfo">
+  <div class="card-box">
+    <div class="card-title">Fee Details</div>
+
+    <table id="feeTable">
+      <tr><th>Type</th><th>Amount</th><th>Status</th></tr>
+
+      <tr>
+        <td>Hostel Fee</td><td>₹45,000</td>
+        <td style="color:green;font-weight:bold">Paid</td>
+      </tr>
+
+      <tr id="messRow">
+        <td>Mess Fee</td><td>₹30,000</td>
+        <td id="messStatus" style="color:orange;font-weight:bold">Pending</td>
+      </tr>
+    </table>
+
+    <button onclick="payFee()">Pay Pending Fee</button>
+  </div>
+</div>
+
+<!-- ---------------- LEAVE REQUEST (ONE TABLE ONLY) ---------------- -->
+<div class="container" id="leaveReq">
+  <div class="card-box">
+    <div class="card-title">Leave / Outpass Requests</div>
+
+    <table id="leaveTable">
+      <tr><th>Date</th><th>Reason</th><th>Status / Action</th></tr>
+
+      <tr>
+        <td>22 Nov</td>
+        <td>Medical Checkup</td>
+        <td><button onclick="approve(this)">Approve</button></td>
+      </tr>
+      <tr>
+        <td>10 Oct</td>
+        <td>Festival Visit</td>
+        <td style="color:green;font-weight:bold">Completed</td>
+      </tr>
+
+      <tr>
+        <td>05 Sep</td>
+        <td>Medical</td>
+        <td style="color:green;font-weight:bold">Completed</td>
+      </tr>
+
+    </table>
+
+  </div>
+</div>
+
+<script>
+
+  function showSection(id) {
+    document.getElementById("welcome").style.display = "none";
+    document.querySelectorAll(".container").forEach(x => x.style.display = "none");
+    document.getElementById(id).style.display = "block";
+  }
+
+  /* ---------- PAY FEE (NO REDIRECT) ---------- */
+  function payFee() {
+    let cell = document.getElementById("messStatus");
+    cell.innerHTML = "Paid";
+    cell.style.color = "green";
+    cell.style.fontWeight = "bold";
+  }
+
+  /* ---------- APPROVE OUTPASS (SAME TABLE) ---------- */
+  function approve(btn) {
+    let td = btn.parentElement;
+    td.innerHTML = `<span style="color:green;font-weight:bold">Completed</span>`;
+  }
+
+</script>
+
+</body>
+</html>

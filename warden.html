@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SRU Hostel Portal - Warden Dashboard</title>
+  <style>
+    /* Your existing CSS here */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+    body {
+      background: #f4f6f9;
+      min-height: 100vh;
+      background-image: url('https://api.makemyhouse.com/public/Media/rimage/1024/designers_project/1573037063_897.JPG?watermark=false');  
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    /* Global Back Button */
+    #globalBackBtn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      padding: 8px 15px;
+      background-color: #004aad;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      z-index: 10000;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+      transition: background-color 0.3s;
+    }
+    #globalBackBtn:hover {
+      background-color: #003366;
+    }
+
+    header {
+      background: #004aad;
+      color: white;
+      padding: 15px 30px;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      user-select: none;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #e6e6e6;
+      padding: 10px 0;
+      gap: 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 50px;
+      z-index: 90;
+    }
+    nav button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: background 0.3s, color 0.3s;
+    }
+    nav button.active,
+    nav button:hover {
+      background: #004aad;
+      color: white;
+      font-weight: 600;
+    }
+
+    section {
+      max-width: 960px;
+      margin: 30px auto;
+      padding: 20px 30px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
+
+    /* Student List Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    table th, table td {
+      border: 1px solid #ccc;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    table th {
+      background: #004aad;
+      color: white;
+    }
+    table tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+    .edit-btn {
+      cursor: pointer;
+      color: #004aad;
+      font-weight: 600;
+      border: none;
+      background: none;
+      font-size: 14px;
+    }
+    .edit-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* Forms */
+    form label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      margin-top: 12px;
+    }
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      resize: vertical;
+    }
+    form textarea {
+      height: 80px;
+    }
+    form button {
+      margin-top: 20px;
+      background: #004aad;
+      color: white;
+      border: none;
+      padding: 14px 25px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    form button:hover {
+      background: #003366;
+    }
+
+    /* Edit Profile and New Student Full Width Form */
+    .full-width-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .full-width-form > div {
+      flex: 1 1 48%;
+    }
+    @media (max-width: 600px) {
+      .full-width-form > div {
+        flex-basis: 100%;
+      }
+    }
+
+    /* Complaints List */
+    .complaints-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .complaint {
+      background: #f0f7ff;
+      border: 1px solid #a0c4ff;
+      border-radius: 10px;
+      padding: 12px 15px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      position: relative;
+    }
+    .complaint .title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #003366;
+    }
+    .complaint .status {
+      font-weight: 600;
+      color: #007700;
+      float: right;
+    }
+    .complaint .time-taken {
+      font-style: italic;
+      color: #555;
+      margin-top: 6px;
+    }
+    .complaint button.mark-resolved-btn {
+      position: absolute;
+      right: 15px;
+      bottom: 12px;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    .complaint button.mark-resolved-btn:hover {
+      background-color: #1e7e34;
+    }
+
+    /* Leave Requests Styling */
+    .leave-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .leave-request {
+      border: 1px solid #cce0ff;
+      background: #e6f0ff;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      position: relative;
+    }
+    .leave-request h4 {
+      margin-bottom: 6px;
+      color: #003366;
+      font-weight: 700;
+    }
+    .leave-status {
+      font-weight: 600;
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 13px;
+      color: white;
+      user-select: none;
+    }
+    .status-pending {
+      background-color: #ff9900;
+    }
+    .status-approved {
+      background-color: #28a745;
+    }
+    .status-rejected {
+      background-color: #dc3545;
+    }
+    .leave-actions {
+      margin-top: 12px;
+    }
+    .leave-actions button {
+      background-color: #004aad;
+      border: none;
+      color: white;
+      padding: 7px 15px;
+      margin-right: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .leave-actions button:hover {
+      background-color: #003366;
+    }
+
+    /* Manage Rooms Section */
+    #manageRooms table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    #manageRooms th, #manageRooms td {
+      border: 1px solid #ccc;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    #manageRooms th {
+      background: #004aad;
+      color: white;
+    }
+    #manageRooms tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+    #manageRooms button {
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    #manageRooms button:hover {
+      background-color: #003366;
+    }
+  </style>
+</head>
+<body>
+  <header>SRU Hostel Portal - Warden Dashboard</header>
+
+  <nav>
+    <button class="nav-btn active" data-target="profile">Profile</button>
+    <button class="nav-btn" data-target="students">Student List</button>
+    <button class="nav-btn" data-target="new-student">Add New Student</button>
+    <button class="nav-btn" data-target="complaints">Complaints</button>
+    <button class="nav-btn" data-target="leave-requests">Leave Requests</button>
+    <button class="nav-btn" data-target="manageRooms">Manage Rooms</button> <!-- New tab -->
+    <button class="nav-btn" id="logoutBtn">Logout</button>
+  </nav>
+
+  <section id="profile" class="active">
+    <h2>Warden Profile</h2>
+    <form id="profileForm">
+      <div class="full-width-form">
+        <div>
+          <label for="wardenName">Name</label>
+          <input type="text" id="wardenName" value="M.Swapna" disabled />
+        </div>
+        <div>
+          <label for="wardenEmail">Email</label>
+          <input type="email" id="wardenEmail" value="warden@sru.edu" disabled />
+        </div>
+        <div>
+          <label for="wardenPhone">Phone Number</label>
+          <input type="tel" id="wardenPhone" value="+91 9876543210" disabled />
+        </div>
+        <div>
+          <label for="wardenHostel">Hostel Block</label>
+          <input type="text" id="wardenHostel" value="Block GH8" disabled />
+        </div>
+      </div>
+      <button type="button" id="editProfileBtn">Edit Profile</button>
+      <button type="submit" id="saveProfileBtn" style="display:none;">Save Profile</button>
+    </form>
+  </section>
+
+  <section id="students">
+    <h2>Student List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Year</th>
+          <th>Branch</th>
+          <th>Hostel Block</th>
+          <th>Room Number</th>
+          <th>Phone</th>
+          <th>Parent Name</th>
+          <th>Parent Phone</th>
+          <th>Fee Status</th>
+          <th>Food Preference</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody id="studentTableBody">
+        <!-- Students will be inserted here -->
+      </tbody>
+    </table>
+  </section>
+
+  <section id="new-student">
+    <h2>Add New Student</h2>
+    <form id="newStudentForm">
+      <div class="full-width-form">
+        <div>
+          <label for="newName">Name</label>
+          <input type="text" id="newName" required />
+        </div>
+        <div>
+          <label for="newYear">Year</label>
+          <select id="newYear" required>
+            <option value="">Select Year</option>
+            <option value="1st">1st</option>
+            <option value="2nd">2nd</option>
+            <option value="3rd">3rd</option>
+            <option value="4th">4th</option>
+          </select>
+        </div>
+        <div>
+          <label for="newBranch">Branch</label>
+          <input type="text" id="newBranch" required />
+        </div>
+        <div>
+          <label for="newBlock">Hostel Block</label>
+          <input type="text" id="newBlock" required />
+        </div>
+        <div>
+          <label for="newRoom">Room Number</label>
+          <input type="text" id="newRoom" required />
+        </div>
+        <div>
+          <label for="newPhone">Phone Number</label>
+          <input type="tel" id="newPhone" required />
+        </div>
+        <div>
+          <label for="newParentName">Parent Name</label>
+          <input type="text" id="newParentName" required />
+        </div>
+        <div>
+          <label for="newParentPhone">Parent Phone Number</label>
+          <input type="tel" id="newParentPhone" required />
+        </div>
+        <div>
+          <label for="newFeeStatus">Fee Status</label>
+          <select id="newFeeStatus" required>
+            <option value="">Select Fee Status</option>
+            <option value="Paid">Paid</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </div>
+        <div>
+          <label for="newFoodPref">Food Preference</label>
+          <select id="newFoodPref" required>
+            <option value="">Select Food Preference</option>
+            <option value="Veg">Veg</option>
+            <option value="Non-Veg">Non-Veg</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+
+  <section id="complaints">
+    <h2>Complaints from Students</h2>
+    <div class="complaints-list" id="complaintsList">
+      <!-- Complaints will appear here -->
+    </div>
+  </section>
+
+  <section id="leave-requests">
+    <h2>Leave Requests</h2>
+    <div class="leave-list" id="leaveList">
+      <!-- Leave requests will be inserted here -->
+    </div>
+  </section>
+
+  <!-- New Manage Rooms Section -->
+  <section id="manageRooms">
+    <h2>Manage Rooms</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Room Number</th>
+          <th>Status</th>
+          <th>Occupant</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="roomsTableBody">
+        <!-- Rooms will be listed here -->
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    // Navigation buttons logic
+    const navButtons = document.querySelectorAll("nav button");
+    const sections = document.querySelectorAll("section");
+
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        navButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const target = btn.getAttribute("data-target");
+
+        sections.forEach(sec => {
+          sec.classList.remove("active");
+          if(sec.id === target) {
+            sec.classList.add("active");
+          }
+        });
+      });
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+    window.location.href = "/logout";  // Flask logout route
+    });
+
+    // Sample student data with foodPref
+    let students = [
+      {
+        name: "Alice Smith",
+        year: "2nd",
+        branch: "CSE",
+        block: "A",
+        room: "101",
+        phone: "+91 9000000001",
+        parentName: "Robert Smith",
+        parentPhone: "+91 9000000011",
+        feeStatus: "Paid",
+        foodPref: "Veg"
+      },
+      {
+        name: "Bob Johnson",
+        year: "3rd",
+        branch: "ECE",
+        block: "B",
+        room: "205",
+        phone: "+91 9000000002",
+        parentName: "Laura Johnson",
+        parentPhone: "+91 9000000012",
+        feeStatus: "Pending",
+        foodPref: "Non-Veg"
+      },
+      {
+        name: "Carol Lee",
+        year: "1st",
+        branch: "ME",
+        block: "A",
+        room: "110",
+        phone: "+91 9000000003",
+        parentName: "David Lee",
+        parentPhone: "+91 9000000013",
+        feeStatus: "Paid",
+        foodPref: "Veg"
+      },
+      {
+        name: "David Kim",
+        year: "4th",
+        branch: "CSE",
+        block: "C",
+        room: "310",
+        phone: "+91 9000000004",
+        parentName: "Emma Kim",
+        parentPhone: "+91 9000000014",
+        feeStatus: "Pending",
+        foodPref: "Non-Veg"
+      },
+      {
+        name: "Eva Green",
+        year: "2nd",
+        branch: "EEE",
+        block: "B",
+        room: "202",
+        phone: "+91 9000000005",
+        parentName: "Frank Green",
+        parentPhone: "+91 9000000015",
+        feeStatus: "Paid",
+        foodPref: "Veg"
+      },
+      {
+        name: "Frank White",
+        year: "3rd",
+        branch: "CSE",
+        block: "A",
+        room: "115",
+        phone: "+91 9000000006",
+        parentName: "Grace White",
+        parentPhone: "+91 9000000016",
+        feeStatus: "Pending",
+        foodPref: "Non-Veg"
+      },
+      {
+        name: "Grace Black",
+        year: "1st",
+        branch: "ECE",
+        block: "C",
+        room: "305",
+        phone: "+91 9000000007",
+        parentName: "Henry Black",
+        parentPhone: "+91 9000000017",
+        feeStatus: "Paid",
+        foodPref: "Veg"
+      },
+      {
+        name: "Henry Brown",
+        year: "4th",
+        branch: "ME",
+        block: "B",
+        room: "215",
+        phone: "+91 9000000008",
+        parentName: "Isla Brown",
+        parentPhone: "+91 9000000018",
+        feeStatus: "Pending",
+        foodPref: "Non-Veg"
+      },
+      {
+        name: "Isla Grey",
+        year: "2nd",
+        branch: "EEE",
+        block: "A",
+        room: "120",
+        phone: "+91 9000000009",
+        parentName: "Jack Grey",
+        parentPhone: "+91 9000000019",
+        feeStatus: "Paid",
+        foodPref: "Veg"
+      },
+      {
+        name: "Jack Blue",
+        year: "3rd",
+        branch: "CSE",
+        block: "C",
+        room: "320",
+        phone: "+91 9000000010",
+        parentName: "Karen Blue",
+        parentPhone: "+91 9000000020",
+        feeStatus: "Pending",
+        foodPref: "Non-Veg"
+      }
+    ];
+
+    function renderStudentTable() {
+      const tbody = document.getElementById("studentTableBody");
+      tbody.innerHTML = "";
+      students.forEach((stu, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${stu.name}</td>
+          <td>${stu.year}</td>
+          <td>${stu.branch}</td>
+          <td>${stu.block}</td>
+          <td>${stu.room}</td>
+          <td>${stu.phone}</td>
+          <td>${stu.parentName}</td>
+          <td>${stu.parentPhone}</td>
+          <td>${stu.feeStatus}</td>
+          <td>${stu.foodPref}</td>
+          <td><button class="edit-btn" data-index="${idx}">Edit</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Edit button listeners
+      document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const index = e.target.getAttribute("data-index");
+          editStudent(index);
+        });
+      });
+    }
+
+    function editStudent(index) {
+      const stu = students[index];
+      // Switch to new-student tab for editing
+      navButtons.forEach(b => b.classList.remove("active"));
+      sections.forEach(sec => sec.classList.remove("active"));
+      document.querySelector('button[data-target="new-student"]').classList.add("active");
+      document.getElementById("new-student").classList.add("active");
+
+      // Fill form with student data for editing
+      document.getElementById("newName").value = stu.name;
+      document.getElementById("newYear").value = stu.year;
+      document.getElementById("newBranch").value = stu.branch;
+      document.getElementById("newBlock").value = stu.block;
+      document.getElementById("newRoom").value = stu.room;
+      document.getElementById("newPhone").value = stu.phone;
+      document.getElementById("newParentName").value = stu.parentName;
+      document.getElementById("newParentPhone").value = stu.parentPhone;
+      document.getElementById("newFeeStatus").value = stu.feeStatus;
+      document.getElementById("newFoodPref").value = stu.foodPref;
+
+      // Save index to form dataset for update on submit
+      document.getElementById("newStudentForm").dataset.editIndex = index;
+    }
+
+    document.getElementById("newStudentForm").addEventListener("submit", e => {
+      e.preventDefault();
+
+      const form = e.target;
+      const newStudent = {
+        name: form.newName.value.trim(),
+        year: form.newYear.value,
+        branch: form.newBranch.value.trim(),
+        block: form.newBlock.value.trim(),
+        room: form.newRoom.value.trim(),
+        phone: form.newPhone.value.trim(),
+        parentName: form.newParentName.value.trim(),
+        parentPhone: form.newParentPhone.value.trim(),
+        feeStatus: form.newFeeStatus.value,
+        foodPref: form.newFoodPref.value
+      };
+
+      if (form.dataset.editIndex !== undefined) {
+        // Editing existing student
+        students[form.dataset.editIndex] = newStudent;
+        delete form.dataset.editIndex;
+      } else {
+        // New student
+        students.push(newStudent);
+      }
+
+      form.reset();
+      renderStudentTable();
+
+      // Go back to students tab
+      navButtons.forEach(b => b.classList.remove("active"));
+      sections.forEach(sec => sec.classList.remove("active"));
+      document.querySelector('button[data-target="students"]').classList.add("active");
+      document.getElementById("students").classList.add("active");
+    });
+
+    // Profile edit/save logic
+    const editProfileBtn = document.getElementById("editProfileBtn");
+    const saveProfileBtn = document.getElementById("saveProfileBtn");
+    const profileFormInputs = ["wardenName", "wardenEmail", "wardenPhone", "wardenHostel"].map(id => document.getElementById(id));
+
+    editProfileBtn.addEventListener("click", () => {
+      profileFormInputs.forEach(input => input.disabled = false);
+      editProfileBtn.style.display = "none";
+      saveProfileBtn.style.display = "inline-block";
+    });
+
+    document.getElementById("profileForm").addEventListener("submit", e => {
+      e.preventDefault();
+      profileFormInputs.forEach(input => input.disabled = true);
+      editProfileBtn.style.display = "inline-block";
+      saveProfileBtn.style.display = "none";
+
+      alert("Profile saved!");
+    });
+
+    // Complaints sample data (added createdAt and status for your request)
+    let complaints = [
+      {
+        id: 1,
+        studentName: "Alice Smith",
+        text: "Water supply not working in room 101.",
+        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+        status: "Pending"
+      },
+      {
+        id: 2,
+        studentName: "Bob Johnson",
+        text: "WiFi connectivity is very slow in block B.",
+        createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
+        status: "Pending"
+      },
+      {
+        id: 3,
+        studentName: "Carol Lee",
+        text: "Room light flickers frequently.",
+        createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+        status: "Resolved"
+      }
+    ];
+
+    function timeElapsed(date) {
+      const now = new Date();
+      const diffMs = now - date;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const diffHrs = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+      const diffMins = Math.floor((diffMs / (1000 * 60)) % 60);
+
+      if(diffDays > 0) return `${diffDays} day(s), ${diffHrs} hour(s) ago`;
+      else if(diffHrs > 0) return `${diffHrs} hour(s), ${diffMins} minute(s) ago`;
+      else return `${diffMins} minute(s) ago`;
+    }
+
+    function renderComplaints() {
+      const container = document.getElementById("complaintsList");
+      container.innerHTML = "";
+
+      complaints.forEach(c => {
+        const div = document.createElement("div");
+        div.classList.add("complaint");
+
+        div.innerHTML = `
+          <div>
+            <span class="title">${c.studentName}:</span>
+            <span class="status">${c.status}</span>
+          </div>
+          <p>${c.text}</p>
+          <div class="time-taken">Received: ${timeElapsed(c.createdAt)}</div>
+        `;
+
+        if(c.status === "Pending") {
+          const btn = document.createElement("button");
+          btn.textContent = "Mark Resolved";
+          btn.className = "mark-resolved-btn";
+          btn.addEventListener("click", () => {
+            c.status = "Resolved";
+            c.resolvedAt = new Date();
+            renderComplaints();
+          });
+          div.appendChild(btn);
+        }
+
+        container.appendChild(div);
+      });
+    }
+
+    // Leave requests sample data
+    let leaveRequests = [
+      {
+        id: 1,
+        studentName: "Alice Smith",
+        fromDate: "2023-10-01",
+        toDate: "2023-10-05",
+        reason: "Family function",
+        status: "Pending"
+      },
+      {
+        id: 2,
+        studentName: "Bob Johnson",
+        fromDate: "2023-10-10",
+        toDate: "2023-10-12",
+        reason: "Medical emergency",
+        status: "Approved"
+      }
+    ];
+
+    function renderLeaveRequests() {
+      const container = document.getElementById("leaveList");
+      container.innerHTML = "";
+
+      leaveRequests.forEach(req => {
+        const div = document.createElement("div");
+        div.classList.add("leave-request");
+
+        let statusClass = "";
+        if(req.status === "Pending") statusClass = "status-pending";
+        else if(req.status === "Approved") statusClass = "status-approved";
+        else if(req.status === "Rejected") statusClass = "status-rejected";
+
+        div.innerHTML = `
+          <h4>${req.studentName}</h4>
+          <p><strong>From:</strong> ${req.fromDate} <strong>To:</strong> ${req.toDate}</p>
+          <p><strong>Reason:</strong> ${req.reason}</p>
+          <div class="leave-status ${statusClass}">${req.status}</div>
+          <div class="leave-actions">
+            ${req.status === "Pending" ? `
+              <button data-id="${req.id}" class="approve-btn">Approve</button>
+              <button data-id="${req.id}" class="reject-btn">Reject</button>
+            ` : ""}
+          </div>
+        `;
+
+        container.appendChild(div);
+      });
+
+      // Add event listeners for approve/reject buttons
+      document.querySelectorAll(".approve-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = +e.target.dataset.id;
+          const req = leaveRequests.find(lr => lr.id === id);
+          if(req) {
+            req.status = "Approved";
+            renderLeaveRequests();
+          }
+        });
+      });
+      document.querySelectorAll(".reject-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = +e.target.dataset.id;
+          const req = leaveRequests.find(lr => lr.id === id);
+          if(req) {
+            req.status = "Rejected";
+            renderLeaveRequests();
+          }
+        });
+      });
+    }
+
+    // Manage Rooms Data (10-15 rooms)
+    let rooms = [
+      { roomNum: "101", occupant: "Alice Smith", status: "Occupied" },
+      { roomNum: "102", occupant: null, status: "Vacant" },
+      { roomNum: "103", occupant: null, status: "Vacant" },
+      { roomNum: "104", occupant: "Bob Johnson", status: "Occupied" },
+      { roomNum: "105", occupant: null, status: "Vacant" },
+      { roomNum: "106", occupant: null, status: "Vacant" },
+      { roomNum: "107", occupant: "Carol Lee", status: "Occupied" },
+      { roomNum: "108", occupant: null, status: "Vacant" },
+      { roomNum: "109", occupant: null, status: "Vacant" },
+      { roomNum: "110", occupant: null, status: "Vacant" }
+    ];
+
+    function renderRooms() {
+      const tbody = document.getElementById("roomsTableBody");
+      tbody.innerHTML = "";
+
+      rooms.forEach((room, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${room.roomNum}</td>
+          <td>${room.status}</td>
+          <td>${room.occupant || "-"}</td>
+          <td>
+            ${room.status === "Vacant" ? `<button data-index="${idx}" class="assign-btn">Assign</button>` : `<button data-index="${idx}" class="vacate-btn">Vacate</button>`}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Assign occupant button
+      document.querySelectorAll(".assign-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const index = +e.target.dataset.index;
+          const occupantName = prompt("Enter occupant name to assign:");
+          if (occupantName && occupantName.trim() !== "") {
+            rooms[index].occupant = occupantName.trim();
+            rooms[index].status = "Occupied";
+            renderRooms();
+          }
+        });
+      });
+
+      // Vacate occupant button
+      document.querySelectorAll(".vacate-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const index = +e.target.dataset.index;
+          if(confirm(`Vacate room ${rooms[index].roomNum}?`)) {
+            rooms[index].occupant = null;
+            rooms[index].status = "Vacant";
+            renderRooms();
+          }
+        });
+      });
+    }
+
+    // Initialize UI
+    renderStudentTable();
+    renderComplaints();
+    renderLeaveRequests();
+    renderRooms();
+  </script>
+</body>
+</html>
